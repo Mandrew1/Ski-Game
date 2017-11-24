@@ -17,14 +17,19 @@ public class Movement : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+        float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * 100;
+        float zForce = Input.GetAxis("Vertical") * Time.deltaTime * 1000;
         if (isInAir == false)
         {
 
-            float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * 100;
-            float zForce = Input.GetAxis("Vertical") * Time.deltaTime * 100;
-
-            gameObject.transform.Rotate(new Vector3(slope.transform.rotation.x, gameObject.transform.rotation.y + xForce, slope.transform.rotation.z));
-            gameObject.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, 0, zForce), ForceMode.Impulse);
+            if (xForce != 0)
+            {
+                gameObject.transform.Rotate(new Vector3(slope.transform.rotation.x, gameObject.transform.rotation.y + xForce, slope.transform.rotation.z));
+            }
+            if (zForce != 0)
+            {
+                gameObject.GetComponent<Rigidbody>().AddRelativeForce(transform.forward * zForce, ForceMode.Force);
+            }
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -33,10 +38,23 @@ public class Movement : MonoBehaviour {
 
         } else
         {
+            xForce *= .1f;
             //Test Code
 
-            float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * 100;
-            gameObject.transform.Rotate(new Vector3(slope.transform.rotation.x, gameObject.transform.rotation.y + xForce, slope.transform.rotation.z));
+            if (xForce != 0)
+            {
+                // gameObject.transform.Rotate(new Vector3(slope.transform.rotation.x, gameObject.transform.rotation.y + xForce, slope.transform.rotation.z));
+                if (Input.GetKey(KeyCode.D))
+                {
+                    
+                    gameObject.GetComponent<Rigidbody>().AddTorque((transform.up * xForce), ForceMode.VelocityChange);
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    gameObject.GetComponent<Rigidbody>().AddTorque(transform.up * xForce, ForceMode.VelocityChange);
+                }
+                
+            }
             if (Input.GetKey(KeyCode.W))
             {
                 gameObject.transform.Rotate(new Vector3(gameObject.transform.rotation.x + 2, 0, 0));
