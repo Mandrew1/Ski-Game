@@ -34,11 +34,13 @@ public class Movement : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 15, 0), ForceMode.Impulse);
+                xForce *= .01f;
+                zForce *= .01f;
             }
 
         } else
         {
-            xForce *= .1f;
+           
             //Test Code
 
             if (xForce != 0)
@@ -57,10 +59,9 @@ public class Movement : MonoBehaviour {
             }
             if (Input.GetKey(KeyCode.W))
             {
-                gameObject.transform.Rotate(new Vector3(gameObject.transform.rotation.x + 2, 0, 0));
+                gameObject.GetComponent<Rigidbody>().AddTorque(transform.right * zForce, ForceMode.VelocityChange);
             } else if (Input.GetKey(KeyCode.S))
-            {
-                gameObject.transform.Rotate(new Vector3(gameObject.transform.rotation.x - 2, 0, 0));
+            {gameObject.GetComponent<Rigidbody>().AddTorque(transform.right * zForce, ForceMode.VelocityChange);
             } 
         }
 
