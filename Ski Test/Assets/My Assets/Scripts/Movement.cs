@@ -5,7 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour {
     public GameObject slope;
     private bool isInAir;
-
+    private RaycastHit hit;
 
     void Start()
     {
@@ -15,10 +15,33 @@ public class Movement : MonoBehaviour {
         }
     }
 
-	// Update is called once per frame
-	void FixedUpdate () {
+    void AlignToTerrain()
+    {
+
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 2f))
+        {
+            if (hit.collider.CompareTag("Ground"))
+            {
+                if (transform != null)
+                {
+                    Debug.Log(hit.normal);
+                    transform.rotation = Quaternion.LookRotation(hit.normal, transform.forward);
+                }
+                
+
+            }
+
+        }
+
+    }
+
+    void FixedUpdate () {
         float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * 100;
-        float zForce = Input.GetAxis("Vertical") * Time.deltaTime * 1000;
+        float zForce = Input.GetAxis("Vertical") * Time.deltaTime * 100;
+       
+        AlignToTerrain();
+        
+        
         if (isInAir == false)
         {
 
@@ -61,7 +84,9 @@ public class Movement : MonoBehaviour {
             {
                 gameObject.GetComponent<Rigidbody>().AddTorque(transform.right * zForce, ForceMode.VelocityChange);
             } else if (Input.GetKey(KeyCode.S))
-            {gameObject.GetComponent<Rigidbody>().AddTorque(transform.right * zForce, ForceMode.VelocityChange);
+                gameObject.GetComponent<Rigidbody>().AddTorque(transform.right * zForce, ForceMode.VelocityChange);
+
+            { 
             } 
         }
 

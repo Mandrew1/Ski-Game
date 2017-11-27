@@ -11,7 +11,7 @@ public class Respawn : MonoBehaviour {
 	void Awake() {
 
             Vector3 spawnLoc = GameObject.Find("Spawn Point").transform.position;
-            Quaternion spawnRotation = GameObject.Find("Slope").transform.rotation;
+            Quaternion spawnRotation = Quaternion.Euler(0, 90, 0);
             playerPrefab = Instantiate(player, spawnLoc, spawnRotation);
             playerPrefab.name = player.name;
 

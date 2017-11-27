@@ -7,8 +7,8 @@ public class CameraFollow : MonoBehaviour {
     	
 	// Update is called once per frame
 	void LateUpdate () {
-        transform.LookAt(player.transform, transform.forward);
-        gameObject.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 2, player.transform.position.z - 5);
-            
+        
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 2, player.transform.position.z - 5);
+        transform.rotation = Quaternion.Euler(new Vector3(20, player.transform.rotation.y, 0));
     }
   }
