@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour {
+    
     public GameObject slope;
+
     private bool isInAir;
+
     private RaycastHit hit;
 
-    void Start()
-    {
-        if (!slope)
-        {
-            Debug.Log("Aright");
-        }
-    }
+    private const float xForceMultiplier = 100;
+
+    private const float zForceMultiplier = 100;
 
     void AlignToTerrain()
     {
@@ -36,8 +35,8 @@ public class Movement : MonoBehaviour {
     }
 
     void FixedUpdate () {
-        float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * 100;
-        float zForce = Input.GetAxis("Vertical") * Time.deltaTime * 100;
+        float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * xForceMultiplier;
+        float zForce = Input.GetAxis("Vertical") * Time.deltaTime * zForceMultiplier;
        
         AlignToTerrain();
         
