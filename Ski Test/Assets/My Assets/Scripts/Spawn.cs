@@ -12,27 +12,20 @@ public class Spawn : MonoBehaviour {
 
     GameObject spawnPoint;
 
-    [HideInInspector]
-    public GameState gameState;
     void Awake()
     {
         spawnPoint = gameObject;
 
         InitialSpawn();
-        if (player != null || spawnPoint != null)
-        {
-            gameState = GameState.Error;
-        } else
-        {
-            gameState = GameState.Active;
-        }
+      
     }
 
     void Respawn()
     {
-        if (player.transform.position != spawnPoint.transform.position && gameState == GameState.Active)
+        if (player.transform.position != spawnPoint.transform.position)
         {
-            player.transform.SetPositionAndRotation(spawnPoint.transform.position, Quaternion.identity);
+            Destroy(player);
+            InitialSpawn();
         } else
         {
             return;
@@ -46,7 +39,8 @@ public class Spawn : MonoBehaviour {
 
             if (spawnPoint != null)
             {
-                player = Instantiate(playerPrefab, spawnPoint.transform);
+                player = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.Euler(0, 0, 0));
+                player.name = playerPrefab.name;
                 SetUpPlayerDependencies();
             }
             
@@ -57,7 +51,7 @@ public class Spawn : MonoBehaviour {
     {
         if (player != null)
         {
-            Debug.Log("Player isn't null");
+            
             //Camera Follow
             GameObject cam = GameObject.Find("Main Camera");
             cam.GetComponent<CameraFollow>().player = player;
@@ -65,10 +59,10 @@ public class Spawn : MonoBehaviour {
             //Slope
             if (GameObject.Find("Slope") != null)
             {
-                Debug.Log("Slop isn't null");
+            
                 if (player.GetComponent<Movement>() != null)
                 {
-                    Debug.Log("Movement isn't null");
+                   
                     player.GetComponent<Movement>().slope = GameObject.Find("Slope");
                 }
                 
