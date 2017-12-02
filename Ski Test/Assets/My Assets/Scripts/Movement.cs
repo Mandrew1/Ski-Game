@@ -22,18 +22,14 @@ public class Movement : MonoBehaviour
         if (!isTurning)
         {
 
-       
-        Ray ray = new Ray(transform.position, -transform.up);
-        Quaternion rot;
-        if (Physics.Raycast(ray, out hit))
 
-        {
-            
-            rot = Quaternion.FromToRotation(transform.up, hit.normal);
+            Ray ray = new Ray(transform.position, -transform.up);
+            if (Physics.Raycast(ray, out hit))
 
-            transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-            
-        }
+            {
+                gameObject.GetComponent<Rigidbody>().AddTorque(new Vector3(0, 0, -20), ForceMode.Force);
+               // transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            }
         }
     }
 
@@ -42,26 +38,27 @@ public class Movement : MonoBehaviour
         if (gameObject != null)
         {
 
-
             float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * xForceMultiplier;
             float zForce = Input.GetAxis("Vertical") * Time.deltaTime * zForceMultiplier;
 
+            Debug.Log("XForce: " + xForce + " ZForce: " + zForce);
 
 
-            Debug.Log("Aright");
-            if (isInAir == false)
+            if (!isInAir)
             {
+
+                if (xForce == 0)
+                {
                     AlignToTerrain();
-                 if (xForce == 0)
-                {
-                    isTurning = false;
-                } else
-                {
-                    isTurning = true;
                 }
+                else
+                {
+
+
+
                     gameObject.transform.Rotate(new Vector3(transform.rotation.x, gameObject.transform.rotation.y + xForce, transform.rotation.z));
                     gameObject.GetComponent<Rigidbody>().AddRelativeForce(transform.forward * zForce, ForceMode.Force);
-
+                }
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 15, 0), ForceMode.Impulse);
@@ -75,20 +72,19 @@ public class Movement : MonoBehaviour
 
                 //Test Code
 
-                if (xForce != 0)
+
+                // gameObject.transform.Rotate(new Vector3(slope.transform.rotation.x, gameObject.transform.rotation.y + xForce, slope.transform.rotation.z));
+                if (Input.GetKey(KeyCode.D))
                 {
-                    // gameObject.transform.Rotate(new Vector3(slope.transform.rotation.x, gameObject.transform.rotation.y + xForce, slope.transform.rotation.z));
-                    if (Input.GetKey(KeyCode.D))
-                    {
 
-                        gameObject.GetComponent<Rigidbody>().AddTorque((transform.up * xForce), ForceMode.VelocityChange);
-                    }
-                    else if (Input.GetKey(KeyCode.A))
-                    {
-                        gameObject.GetComponent<Rigidbody>().AddTorque(transform.up * xForce, ForceMode.VelocityChange);
-                    }
-
+                    gameObject.GetComponent<Rigidbody>().AddTorque((transform.up * xForce), ForceMode.VelocityChange);
                 }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    gameObject.GetComponent<Rigidbody>().AddTorque(transform.up * xForce, ForceMode.VelocityChange);
+                }
+
+
                 if (Input.GetKey(KeyCode.W))
                 {
                     gameObject.GetComponent<Rigidbody>().AddTorque(transform.right * zForce, ForceMode.VelocityChange);
@@ -108,7 +104,7 @@ public class Movement : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Ground") && gameObject != null)
         {
-           
+
             isInAir = false;
         }
     }

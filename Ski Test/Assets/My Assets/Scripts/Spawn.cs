@@ -39,7 +39,7 @@ public class Spawn : MonoBehaviour {
 
             if (spawnPoint != null)
             {
-                player = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.Euler(0, 0, 0));
+                player = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.Euler(new Vector3(0, 90, 0)));
                 player.name = playerPrefab.name;
                 SetUpPlayerDependencies();
             }
