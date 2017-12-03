@@ -11,7 +11,7 @@ public class CameraFollow : MonoBehaviour {
 	void LateUpdate () {
       
          transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 2, player.transform.position.z - 5);
-         transform.rotation = Quaternion.Euler(new Vector3(20, player.transform.rotation.y, 0));
+         transform.rotation = Quaternion.Euler(new Vector3(20, player.transform.rotation.y, player.transform.rotation.z));
         
        
     }

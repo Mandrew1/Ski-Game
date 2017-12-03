@@ -11,24 +11,23 @@ public class Movement : MonoBehaviour
 
     private RaycastHit hit;
 
-    private const float xForceMultiplier = 100;
-
-    private const float zForceMultiplier = 10000;
-
     private bool isTurning = false;
+
+    private Vector3 turnAmt;
 
     void AlignToTerrain()
     {
         if (!isTurning)
         {
-
-
             Ray ray = new Ray(transform.position, -transform.up);
             if (Physics.Raycast(ray, out hit))
 
             {
-                gameObject.GetComponent<Rigidbody>().AddTorque(new Vector3(0, 0, -20), ForceMode.Force);
-               // transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                if (transform.rotation.z != Quaternion.FromToRotation(Vector3.up, hit.normal).z)
+                {
+                    //gameObject.GetComponent<Rigidbody>().AddForceAtPosition(new Vector3(0, 0, -20), -transform.up, ForceMode.Force);
+                    transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal + turnAmt);
+                }
             }
         }
     }
@@ -38,64 +37,61 @@ public class Movement : MonoBehaviour
         if (gameObject != null)
         {
 
-            float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * xForceMultiplier;
-            float zForce = Input.GetAxis("Vertical") * Time.deltaTime * zForceMultiplier;
-
-            Debug.Log("XForce: " + xForce + " ZForce: " + zForce);
-
+            float xForce = Input.GetAxis("Horizontal") * Time.deltaTime * 100000;
+            float zForce = Input.GetAxis("Vertical") * Time.deltaTime * 100000;
 
             if (!isInAir)
             {
-
-                if (xForce == 0)
+                
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
                 {
-                    AlignToTerrain();
-                }
-                else
-                {
-
-
-
+                    isTurning = true;
+                    Debug.Log("A || D Pressed");
                     gameObject.transform.Rotate(new Vector3(transform.rotation.x, gameObject.transform.rotation.y + xForce, transform.rotation.z));
-                    gameObject.GetComponent<Rigidbody>().AddRelativeForce(transform.forward * zForce, ForceMode.Force);
-                }
-                if (Input.GetKeyDown(KeyCode.Space))
+                    turnAmt = transform.rotation.eulerAngles;
+                } else if  (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
                 {
-                    gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 15, 0), ForceMode.Impulse);
-                    xForce *= .01f;
-                    zForce *= .01f;
+                    gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * zForce, ForceMode.Force);
+
+                } else if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 1500, 0), ForceMode.Impulse);
+
+                } else
+                {
+                    isTurning = false;
                 }
 
             }
             else
             {
-
-                //Test Code
-
-
-                // gameObject.transform.Rotate(new Vector3(slope.transform.rotation.x, gameObject.transform.rotation.y + xForce, slope.transform.rotation.z));
                 if (Input.GetKey(KeyCode.D))
                 {
-
                     gameObject.GetComponent<Rigidbody>().AddTorque((transform.up * xForce), ForceMode.VelocityChange);
                 }
+
                 else if (Input.GetKey(KeyCode.A))
                 {
                     gameObject.GetComponent<Rigidbody>().AddTorque(transform.up * xForce, ForceMode.VelocityChange);
                 }
 
-
                 if (Input.GetKey(KeyCode.W))
                 {
                     gameObject.GetComponent<Rigidbody>().AddTorque(transform.right * zForce, ForceMode.VelocityChange);
                 }
+
                 else if (Input.GetKey(KeyCode.S))
                     gameObject.GetComponent<Rigidbody>().AddTorque(transform.right * zForce, ForceMode.VelocityChange);
 
                 {
                 }
             }
+
+
+
+            AlignToTerrain();
         }
+
     }
 
 
