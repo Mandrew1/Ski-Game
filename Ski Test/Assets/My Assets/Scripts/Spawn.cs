@@ -24,8 +24,8 @@ public class Spawn : MonoBehaviour {
     {
         if (player.transform.position != spawnPoint.transform.position)
         {
-            Destroy(player);
-            InitialSpawn();
+            player.transform.position = spawnPoint.transform.position;
+           
         } else
         {
             return;
